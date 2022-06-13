@@ -34,7 +34,7 @@ class HttpError(BaseError):
         return self._data
 
 
-class ApiError(BaseError):
+class ApiError(HttpError):
 
     __slots__ = ()
 
@@ -42,6 +42,14 @@ class ApiError(BaseError):
 
         data = data['errors']
 
-        message = json.dumps(data, indent = 4)
+        super().__init__(response, data)
 
-        super().__init__(response, data, message)
+    def __str__(self):
+
+        info = json.dumps(self._data, indent = 2)
+
+        return info
+
+    def __repr__(self):
+
+        return f'{self.__class__.__name__}: {self.__str__()}'
